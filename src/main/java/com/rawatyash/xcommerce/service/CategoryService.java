@@ -1,16 +1,16 @@
 package com.rawatyash.xcommerce.service;
 
 import com.rawatyash.xcommerce.model.Category;
+import com.rawatyash.xcommerce.request.CategoryDTO;
+import com.rawatyash.xcommerce.response.CategoryResponseDTO;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public interface CategoryService {
-    List<Category> createCategory(Category category);
+    CategoryResponseDTO createCategory(CategoryDTO category);
 
-    List<Category> getCategories();
+    CategoryResponseDTO getCategories();
 
     void deleteCategory(Long id);
-    void updateCategory(Long id, Category category);
+    void updateCategory(Long id, CategoryDTO category);
 }

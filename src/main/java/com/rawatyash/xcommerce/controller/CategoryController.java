@@ -1,6 +1,7 @@
 package com.rawatyash.xcommerce.controller;
 
-import com.rawatyash.xcommerce.model.Category;
+import com.rawatyash.xcommerce.request.CategoryDTO;
+import com.rawatyash.xcommerce.response.CategoryResponseDTO;
 import com.rawatyash.xcommerce.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -8,30 +9,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController()
 @RequestMapping("/api")
 public class CategoryController {
 
-    private CategoryService categoryService;
-    private List<Category> categories = new ArrayList<>();
+    private final CategoryService categoryService;
+
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
     @GetMapping("/public/categories")
-    public ResponseEntity<List<Category>> getCategories() {
-        List<Category> allCategories = categoryService.getCategories();
+    public ResponseEntity<CategoryResponseDTO> getCategories() {
+        CategoryResponseDTO allCategories = categoryService.getCategories();
         return new ResponseEntity<>(allCategories, HttpStatus.OK);
     }
 
     @PostMapping("/admin/category/add")
-    public ResponseEntity<List<Category>> createCategory(@Valid @RequestBody Category category) {
-        List<Category> createdCategory = categoryService.createCategory(category);
-        return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+    public ResponseEntity<CategoryResponseDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+        CategoryResponseDTO categoryResponseDTO = categoryService.createCategory(categoryDTO);
+        return new ResponseEntity<>(categoryResponseDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/admin/category/{id}")
@@ -44,7 +42,7 @@ public class CategoryController {
         }
     }
     @PutMapping("/admin/category/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long id,@RequestBody Category category) {
+    public ResponseEntity<String> updateCategory(@PathVariable Long id,@RequestBody CategoryDTO category) {
         try {
             categoryService.updateCategory(id, category);
             return new ResponseEntity<>("OK", HttpStatus.OK);
