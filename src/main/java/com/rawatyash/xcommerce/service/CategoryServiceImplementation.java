@@ -6,6 +6,9 @@ import com.rawatyash.xcommerce.reposiltory.CategoryRepository;
 import com.rawatyash.xcommerce.request.CategoryDTO;
 import com.rawatyash.xcommerce.response.CategoryResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,11 +24,18 @@ public class CategoryServiceImplementation implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public CategoryResponseDTO getCategories() {
-        List<Category> categories = categoryRepository.findAll();
+    public CategoryResponseDTO getCategories(Integer pageNumber, Integer pageSize) {
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize);
+        Page<Category> categoryPage = categoryRepository.findAll(pageDetails);
+        List<Category> categories = categoryPage.getContent();
         List<CategoryDTO> categoryDTOList = categories.stream().map(CategoryMapper::toDTO).toList();
         CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
         categoryResponseDTO.setContent(categoryDTOList);
+        categoryResponseDTO.setPageNumber(categoryPage.getNumber());
+        categoryResponseDTO.setPageSize(categoryPage.getSize());
+        categoryResponseDTO.setTotalPages(categoryPage.getTotalPages());
+        categoryResponseDTO.setTotalElements(categoryPage.getNumberOfElements());
+        categoryResponseDTO.setLastPage(categoryPage.isLast());
         return categoryResponseDTO;
     }
 

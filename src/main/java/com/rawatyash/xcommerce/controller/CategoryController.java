@@ -21,8 +21,11 @@ public class CategoryController {
     }
 
     @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponseDTO> getCategories() {
-        CategoryResponseDTO allCategories = categoryService.getCategories();
+    public ResponseEntity<CategoryResponseDTO> getCategories(
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize
+    ) {
+        CategoryResponseDTO allCategories = categoryService.getCategories(pageNumber,pageSize );
         return new ResponseEntity<>(allCategories, HttpStatus.OK);
     }
 
