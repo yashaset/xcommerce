@@ -1,5 +1,6 @@
 package com.rawatyash.xcommerce.controller;
 
+import com.rawatyash.xcommerce.config.AppConstants;
 import com.rawatyash.xcommerce.request.CategoryDTO;
 import com.rawatyash.xcommerce.response.CategoryResponseDTO;
 import com.rawatyash.xcommerce.service.CategoryService;
@@ -22,10 +23,13 @@ public class CategoryController {
 
     @GetMapping("/public/categories")
     public ResponseEntity<CategoryResponseDTO> getCategories(
-            @RequestParam Integer pageNumber,
-            @RequestParam Integer pageSize
+            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(defaultValue = AppConstants.PAGE_SIZE,  required = false) Integer pageSize,
+            @RequestParam(defaultValue = AppConstants.SORT_CATEGORIES_BY,  required = false) String sortBy,
+            @RequestParam(defaultValue = AppConstants.SORT_DIR,  required = false) String sortOrder
+
     ) {
-        CategoryResponseDTO allCategories = categoryService.getCategories(pageNumber,pageSize );
+        CategoryResponseDTO allCategories = categoryService.getCategories(pageNumber,pageSize, sortBy, sortOrder );
         return new ResponseEntity<>(allCategories, HttpStatus.OK);
     }
 
